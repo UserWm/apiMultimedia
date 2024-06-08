@@ -76,10 +76,10 @@ app.delete('/api/tracks/:id', (req, res) => {
                 // Eliminar el archivo de audio del servidor
                 fs.unlink(track.audio, err => {
                     if (err) res.status(500).json({ error: err.message });
-                    else res.json({ message: 'Track deleted successfully' });
+                    else res.json({ message: 'Cancion eliminada exitosamente' });
                 });
             } else {
-                res.status(404).json({ message: 'Track not found' });
+                res.status(404).json({ message: 'Cancion no encontrada' });
             }
         })
         .catch(err => res.status(500).json({ error: err.message }));
@@ -87,5 +87,5 @@ app.delete('/api/tracks/:id', (req, res) => {
 
 // Iniciar el servidor
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });

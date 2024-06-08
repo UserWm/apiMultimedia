@@ -102,7 +102,7 @@
                 clearForm();
                 fetchTracks();
             } else {
-                alert('Failed to upload track.');
+                alert('Error al subir la cancion.');
             }
         }
 
@@ -130,7 +130,7 @@
                 fetchTracks();
                 closeModal();
             } else {
-                alert('Failed to update track.');
+                alert('Error al editar la cancion.');
             }
         }
 
@@ -156,7 +156,7 @@
             if (response.ok) {
                 fetchTracks();
             } else {
-                alert('Failed to delete track.');
+                alert('Error al eliminar la cancion.');
             }
         }
 
