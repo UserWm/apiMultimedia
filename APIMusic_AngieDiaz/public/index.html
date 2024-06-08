@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Musical by Angie Diaz ⋆ ˚｡⋆୨୧˚</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #e5dbff; /* Morado claro */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-family: 'Cooper Black', sans-serif;
+            text-align: center;
+            color: #421849; /* Morado oscuro */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            color: #542675; /* Morado claro */
+        }
+
+        th {
+            background-color: #dcbbf1; /* Morado pastel */
+        }
+
+        /* Estilos de las columnas */
+        th.nombre {
+            background-color: #eba7f9; /* Morado claro */
+        }
+
+        th.artista {
+            background-color: #a27ad2; /* Morado pastel */
+        }
+
+        th.genero {
+            background-color: #6f5391; /* Morado pastel */
+        }
+
+        th.precio {
+            background-color: #703686; /* Morado pastel */
+        }
+
+        th.audio {
+            background-color: #9b6ab4; /* Morado pastel */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>.·:*¨API Musical¨*:·.</h1>
+    <table>
+        <thead>
+            <tr>
+                <th class="nombre">Nombre</th>
+                <th class="artista">Artista</th>
+                <th class="genero">Género</th>
+                <th class="precio">Precio</th>
+                <th class="audio">Audio</th>
+            </tr>
+        </thead>
+        <tbody id="track-list"></tbody>
+    </table>
+    <script>
+        async function fetchTracks() {
+            const response = await fetch('/api/pistas');
+            const tracks = await response.json();
+            const trackList = document.getElementById('track-list');
+            tracks.forEach(track => {
+                const tr = document.createElement('tr');
+                const nombreTd = document.createElement('td');
+                nombreTd.textContent = track.nombre;
+                tr.appendChild(nombreTd);
+
+                const artistaTd = document.createElement('td');
+                artistaTd.textContent = track.artista;
+                tr.appendChild(artistaTd);
+
+                const generoTd = document.createElement('td');
+                generoTd.textContent = track.genero;
+                tr.appendChild(generoTd);
+
+                const precioTd = document.createElement('td');
+                precioTd.textContent = `$${track.precio}`;
+                tr.appendChild(precioTd);
+
+                const audioTd = document.createElement('td');
+                const audio = document.createElement('audio');
+                audio.src = `/Pistas/${track.audio}`;
+                audio.controls = true;
+                audioTd.appendChild(audio);
+                tr.appendChild(audioTd);
+
+                trackList.appendChild(tr);
+            });
+        }
+        fetchTracks();
+    </script>
+</body>
+</html>
