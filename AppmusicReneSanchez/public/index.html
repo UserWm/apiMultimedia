@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .Songs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .song {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .Audio-info {
+        margin-bottom: 20px;
+      }
+
+      .Audio-info h2 {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .audio {
+        width: 100%;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="Songs"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("/api/songs")
+          .then((response) => response.json())
+          .then((SONG) => {
+            const songsD = document.getElementById("Songs");
+            SONG.forEach((song) => {
+              const songD = document.createElement("div");
+              songD.classList.add("song");
+
+              const audioInfo = document.createElement("div");
+              audioInfo.classList.add("Audio-info");
+              audioInfo.innerHTML = `<h2>${song.cancion}</h2>
+              <h2>${song.artista}</h2>
+              <h2>${song.genero}</h2>
+              <h2>${song.precio.toFixed(2)}</h2>`;
+
+              songD.appendChild(audioInfo);
+              songsD.appendChild(songD);
+
+              const songAudio = document.createElement("audio");
+              songAudio.src = `/uploads/${song.audio}`;
+              songAudio.controls = true;
+              //   songsD.appendChild(songAudio);
+              //   songD.appendChild(songD);
+              songD.appendChild(songAudio);
+              songsD.appendChild(songD);
+            });
+          })
+          .catch((error) => console.error("error", error));
+      });
+    </script>
+  </body>
+</html>
