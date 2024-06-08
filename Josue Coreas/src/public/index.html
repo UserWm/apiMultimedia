@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <title>Express songs app</title>
+</head>
+<body>
+  <div id="songs"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("/api/songs")
+        .then((res) => res.json())
+        .then((data) => {
+          const songs = document.getElementById("songs");
+          data.forEach((song) => {
+            const audio = document.createElement("audio");
+            audio.classList = "audio"
+            audio.src = `/tracks/${song.audio}`;
+
+            const songContainer = document.createElement("div");
+            songContainer.classList.add("song-container");
+
+            songContainer.innerHTML = `
+              <div>
+                <img src="/music.png" alt="musical note" class="icon-music" />
+              </div>
+              <div class="info-song">
+                <h3>${song.nombre}</h3>
+                <div class="song-info">
+                  <p>${song.artistas}</p>
+                  <p>${song.genero}</p>
+                  <div class="line-song-container">
+                    <span class="line-song"></span>
+                  </div>
+                  <p>$${song.precio.toFixed(2)}</p>
+                </div>
+              </div>
+            `;
+
+            const divPlayContainer = document.createElement("div");
+            const playImg = document.createElement("img");
+            playImg.src = "/play-button.png";
+            playImg.classList.add("play-button");
+            const lineSong = songContainer.querySelector(".line-song");
+
+            audio.addEventListener("timeupdate", () => {
+              const duration = audio.duration;
+              const currentTime = audio.currentTime;
+              const percentage = (currentTime / duration) * 100;
+              lineSong.style.width = `${percentage}%`;
+            })
+
+            playImg.addEventListener("click", (e) => {
+              const audios = document.querySelectorAll("audio");
+              audios.forEach((audio) => {
+                if(!audio.paused && audio !== e.target.parentElement.querySelector(".audio")) {
+                  audio.pause();
+                  audio.currentTime = 0;
+                  const playImg = audio.parentElement.querySelector(".play-button");
+                  playImg.src = "play-button.png";
+                }
+              })
+              const audio = e.target.parentElement.querySelector(".audio");
+              console.log("BUFFERED",audio.duration)
+              if(audio.paused) {
+                audio.play();
+                isAudioPlaying = true;
+                audio.volume = 0.2;
+                playImg.src = "pause.png";
+              }else {
+                audio.pause();
+                isAudioPlaying = false;
+                audio.currentTime = 0;
+                playImg.src = "play-button.png";
+              }
+            })
+
+            divPlayContainer.appendChild(playImg);
+            songContainer.appendChild(divPlayContainer);
+            divPlayContainer.appendChild(audio);
+
+            songs.appendChild(songContainer);
+            songs.appendChild(songContainer);
+          })
+        })
+        .catch((err) => console.error(err));
+    })
+  </script>
+</body>
+</html>
