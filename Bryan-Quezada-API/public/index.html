@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreria de Musica</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Libreria de Musica</h1>
+    </header>
+    <main>
+        <div class="upload-form">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <h2>Subir nueva cancion</h2>
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="artist">Artista:</label>
+                <input type="text" id="artist" name="artist" required>
+                <label for="genre">Genero:</label>
+                <input type="text" id="genre" name="genre" required>
+                <label for="price">Precio:</label>
+                <input type="number" id="price" name="price" step="0.01" required>
+                <label for="audio">Seleccionar Archivo:</label>
+                <input type="file" id="audio" name="audio" accept="audio/*" required>
+                <label for="imageUrl">URL Imagen:</label>
+                <input type="text" id="imageUrl" name="imageUrl" required>
+                <button type="submit">Subir</button>
+            </form>
+        </div>
+        <div id="tracks" class="tracks-container"></div>
+    </main>
+
+    <!-- Formulario de edición modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <form id="editForm">
+                <h2>Edit Track</h2>
+                <input type="hidden" id="editId">
+                <label for="editName">Nombre:</label>
+                <input type="text" id="editName" name="name" required>
+                <label for="editArtist">Artista:</label>
+                <input type="text" id="editArtist" name="artist" required>
+                <label for="editGenre">Genero:</label>
+                <input type="text" id="editGenre" name="genre" required>
+                <label for="editPrice">Precio:</label>
+                <input type="number" id="editPrice" name="price" step="0.01" required>
+                <label for="editImageUrl">URL Imagen:</label>
+                <input type="text" id="editImageUrl" name="imageUrl" required>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('artist').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('audio').value = '';
+            document.getElementById('imageUrl').value = '';
+        }
+
+        async function fetchTracks() {
+            const response = await fetch('/api/tracks');
+            const tracks = await response.json();
+
+            const tracksContainer = document.getElementById('tracks');
+            tracksContainer.innerHTML = tracks.map(track => `
+                <div class="track">
+                    <img src="${track.imageUrl}" alt="${track.name}" class="track-image"/>
+                    <h2>${track.name}</h2>
+                    <p>Artista: ${track.artist}</p>
+                    <p>Genero: ${track.genre}</p>
+                    <p>Precio: $${track.price}</p>
+                    <audio controls>
+                        <source src="/${track.audio}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="action-buttons">
+                        <button onclick="openEditModal('${track._id}', '${track.name}', '${track.artist}', '${track.genre}', '${track.price}', '${track.imageUrl}')">Editar</button>
+                        <button onclick="deleteTrack('${track._id}')">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function uploadTrack(event) {
+            event.preventDefault();
+
+            const formData = new FormData(document.getElementById('uploadForm'));
+
+            const response = await fetch('/api/tracks', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                clearForm();
+                fetchTracks();
+            } else {
+                alert('Failed to upload track.');
+            }
+        }
+
+        async function editTrack(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editName').value;
+            const artist = document.getElementById('editArtist').value;
+            const genre = document.getElementById('editGenre').value;
+            const price = document.getElementById('editPrice').value;
+            const imageUrl = document.getElementById('editImageUrl').value;
+
+            const response = await fetch(`/api/tracks/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name, artist, genre, price, imageUrl
+                })
+            });
+
+            if (response.ok) {
+                fetchTracks();
+                closeModal();
+            } else {
+                alert('Failed to update track.');
+            }
+        }
+
+        function openEditModal(id, name, artist, genre, price, imageUrl) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editName').value = name;
+            document.getElementById('editArtist').value = artist;
+            document.getElementById('editGenre').value = genre;
+            document.getElementById('editPrice').value = price;
+            document.getElementById('editImageUrl').value = imageUrl;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        async function deleteTrack(id) {
+            const response = await fetch(`/api/tracks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchTracks();
+            } else {
+                alert('Failed to delete track.');
+            }
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', uploadTrack);
+        document.getElementById('editForm').addEventListener('submit', editTrack);
+
+        fetchTracks();
+    </script>
+</body>
+</html>
