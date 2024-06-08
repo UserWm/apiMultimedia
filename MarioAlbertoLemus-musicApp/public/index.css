@@ -1,0 +1,49 @@
+body {
+    background-color: rgb(240, 232, 232);
+}
+
+.header {
+    text-align: center;
+}
+
+.song__list {
+    background-color: #fff;
+    margin: auto;
+    max-width: 800px;
+    margin-top: 3rem;
+    height: 90vh;
+    border-radius: 25px;
+}
+
+.song__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+}
+
+.song__info {
+    display: flex;
+    align-items: center;
+    width: 500px;
+}
+
+.song__price {
+    font-size: 50px;
+    font-weight: bold;
+    padding-right: 25px;
+}
+
+.song__artist__genre {
+    display: flex;
+    align-items: center;
+}
+
+.song__artist__genre > p {
+    padding: 0 5px;
+}
+
+.audio__container {
+    width: 300px;
+}
+
