@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    
+</head>
+    <style>
+        /* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #FFFFFF;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #1DB954;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+main {
+    padding: 20px;
+}
+
+ul#track-list {
+    list-style: none;
+    padding: 0;
+}
+
+ul#track-list li {
+    background-color: #282828;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    transition: background-color 0.3s;
+}
+
+ul#track-list li:hover {
+    background-color: #333;
+}
+
+ul#track-list strong {
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 5px;
+}
+
+audio {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 5px;
+    outline: none;
+}
+    </style>
+
+<body>
+    <header>
+        <h1>Spotify</h1>
+    </header>
+    <main>
+        <ul id="track-list"></ul>
+    </main>
+    <script>
+        async function fetchTracks() {
+            const response = await fetch('/api/tracks');
+            const tracks = await response.json();
+            const trackList = document.getElementById('track-list');
+
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <strong>${track.name}</strong> by ${track.artist} - ${track.genre} ($${track.price})
+                    <br>
+                    <audio controls>
+                        <source src="/tracks/${track.audio}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                `;
+                trackList.appendChild(listItem);
+            });
+        }
+
+        fetchTracks();
+    </script>
+</body>
+
+</html>
