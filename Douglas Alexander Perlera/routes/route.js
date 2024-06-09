@@ -66,7 +66,7 @@ music.put('/:id', carga.single('Audio'), async function (req, res) {
   try {
       const song = await Song.findById(id);
       if (!song) {
-          return res.status(404).json({ error: 'Producto no encontrado' });
+          return res.status(404).json({ error: 'Cancion no encontrada' });
       }
 
       song.Nombre = Nombre || song.Nombre;
@@ -84,5 +84,17 @@ music.put('/:id', carga.single('Audio'), async function (req, res) {
       res.status(500).json({ error: err.message });
   }
 });
+music.delete('/:id',async function (req, res) {
+  try{
+      const song =  await Song.findByIdAndDelete(req.params.id)
+      if(!song)
+          return res.status(400).json({error:`Cancion no encontrado`})
+          res.status(200).json({message:`Cancion eliminado`})
+
+      }catch(err){
+          res.status(500).json({error:err.message})
+      }
+
+}),
 
 module.exports = music;
