@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Library</title>
+</head>
+<style>
+    body {
+        background-color: black;
+        color: white;
+
+    }
+
+    section {
+        display: flex;
+    }
+
+    div.titulo {
+        border: #289b11 1px solid;
+        margin: 0;
+        margin-bottom: 1%;
+    }
+
+    div.titulo:hover {
+        border: #2eff04 1px solid;
+        margin: 0;
+        margin-bottom: 1%;
+    }
+
+
+    div.titulo>h1 {
+        text-align: center;
+        font-size: 4rem;
+        color: #79ff5f;
+        margin: 0;
+    }
+
+    /*Form*/
+    .container {
+        background: #004044;
+        padding: 2em;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .container:hover {
+        transform: scale(1.01);
+    }
+
+    h1 {
+        margin-bottom: 1em;
+        font-size: 24px;
+        color: #ffffff;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 1em;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+        width: 100%;
+        padding: 0.8em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    input[type="file"] {
+        padding: 0.4em;
+    }
+
+    button {
+        padding: 0.8em;
+        background-color: #289b11;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background-color: greenyellow;
+    }
+
+    /*Music*/
+
+    .flex-container {
+        display: flex;
+        width: 80%;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        background-color: rgb(6, 15, 15);
+        border: 1px solid white;
+        padding: 1%;
+        margin: 0 auto;
+    }
+
+    .flex-container:hover {
+
+
+        border: 2px solid white;
+
+    }
+
+
+
+    .Track {
+        margin: 0.5%;
+        border: 1px solid white;
+        display: flex;
+        flex-direction: row;
+        text-align: justify;
+        align-items: center;
+        width: 90%;
+    }
+
+    .audio {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        text-align: start;
+        margin: 1%;
+    }
+
+    .price {
+        color: rgb(255, 207, 47);
+    }
+
+    .Track:hover {
+        background-color: cadetblue;
+    }
+
+
+
+
+    audio {
+        width: 100%;
+    }
+</style>
+
+<body>
+    <div class="titulo">
+        <h1>JonaMusic</h1>
+    </div>
+    <section>
+        <div class="container">
+            <h1>Upload a New Track</h1>
+            <form id="uploadForm" enctype="multipart/form-data" class="form">
+                <div class="form-group">
+                    <label for="name">Track Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="artist">Artist:</label>
+                    <input type="text" id="artist" name="artist" required>
+                </div>
+                <div class="form-group">
+                    <label for="genre">Genre:</label>
+                    <input type="text" id="genre" name="genre" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="text" id="price" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="audio">Audio File:</label>
+                    <input type="file" id="audio" name="audio" required>
+                </div>
+                <button type="submit">Upload Track</button>
+            </form>
+        </div>
+
+        <script>
+            document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData();
+                formData.append('name', document.getElementById('name').value);
+                formData.append('artist', document.getElementById('artist').value);
+                formData.append('genre', document.getElementById('genre').value);
+                formData.append('price', document.getElementById('price').value);
+                formData.append('audio', document.getElementById('audio').files[0]);
+
+                try {
+                    const response = await fetch('/api/tracks', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        alert('Track uploaded successfully!');
+                    } else {
+                        alert('Failed to upload track');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading the track');
+                }
+            });
+        </script>
+
+
+        <div id="track-list" class="flex-container">
+            <h1 style="font-size: 2.5rem;">Music Library</h1>
+
+        </div>
+        <script>
+            async function fetchTracks() {
+                const response = await fetch('/api/tracks');
+                const tracks = await response.json();
+                const trackList = document.getElementById('track-list');
+
+                tracks.forEach(track => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add("Track")
+                    listItem.innerHTML = `
+                <div class="audio">
+                    <strong>-${track.name}</strong> by ${track.artist} - ${track.genre}
+                    <br>
+                    <audio controls>
+                        <source src="/tracks/${track.audio}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                    <strong class="price"> Price :($${track.price})</strong>
+                `;
+                    trackList.appendChild(listItem);
+                });
+            }
+
+            fetchTracks();
+        </script>
+    </section>
+</body>
+
+</html>
