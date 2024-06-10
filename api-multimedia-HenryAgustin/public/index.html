@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia App</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        main { display: flex; flex-direction: column; gap: 10px; align-items: center; margin: 0 40px; }
+        h1 { font-size: 48px; font-weight: 700;  }
+        #contenedor { width: 100%; display: flex; gap: 8px; justify-content: space-around; flex-direction: row; flex-wrap: wrap;}
+        .pista { display: flex; flex-direction: column; gap: 10px; }
+        .image { width: 300px; }
+      </style>
+</head>
+<body>
+    <main>
+        <h1>Lista de canciones</h1>
+        <div id="contenedor"></div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+            fetch('/api/multimedia')
+            .then(res => res.json())
+            .then(pistasMusicales => {
+                const pistasContenedor = document.getElementById('contenedor')
+                pistasMusicales.forEach(producto => {
+                    const pista = document.createElement('div')
+                    pista.classList.add('pista')
+                    
+                    const pistaImg = document.createElement('img')
+                    pistaImg.classList.add('image')
+                    pistaImg.src = `/uploads/${producto.imagen}`
+                    pistaImg.alt = producto.nombre
+                    pista.appendChild(pistaImg)
+
+                    const pistaAudio = document.createElement('audio')
+                    pistaAudio.classList.add('audio')
+                    pistaAudio.src = `/uploads/${producto.audio}`
+                    pistaAudio.controls = true;
+                    pista.appendChild(pistaAudio)
+                    
+                    const pistaInfo = document.createElement('div')
+                    pistaInfo.classList.add('Producto-info')
+                    pistaInfo.innerHTML = `
+                    <h2>${producto.nombre}</h2>
+                    <p>${producto.artista}</p>
+                    <p>${producto.genero}</p>
+                    <p>${producto.precio.toFixed(2)}</p>
+                    `
+                    pista.appendChild(pistaInfo)
+                    pistasContenedor.appendChild(pista)
+                });
+            })
+        })
+    </script>
+</body>
+</html>
