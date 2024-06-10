@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musica</title>
+</head>
+<body>
+    <div id="Song"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            fetch("/api/musica")
+            .then(response  => response.json())
+            .then((MUSICA) => {
+                const songD = document.getElementById('Song')
+                MUSICA.forEach(song => {
+                    const songA = document.createElement('div')
+                    songA.classList.add('song')
+
+                    const musicAudio = document.createElement('audio')
+                    musicAudio.src = `/tracks/${song.audio}`
+                    musicAudio.controls = true
+                    songD.appendChild(musicAudio)
+
+                    const songInfo = document.createElement('div')
+                    songInfo.classList.add('Audio-info')
+                    songInfo.innerHTML = `
+                    <h2>${song.nombre}</h2>
+                    <p>Artista: ${song.artista}</p>
+                    <p>Genero: ${song.genero}</p>
+                    <p>Precio: ${song.precio.toFixed(2)}</p>
+                    `
+
+                    songA.appendChild(songInfo)
+                    songD.appendChild(songA)
+                });
+            })
+            .catch(error => console.error('Error: ', error))
+        })
+    </script>
+</body>
+</html>
