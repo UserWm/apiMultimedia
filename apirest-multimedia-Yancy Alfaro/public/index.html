@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+</head>
+<style>
+    img {
+        width: 250px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .musica {
+        margin-bottom: 20px;
+    }
+</style>
+<body>
+    <h1>Reproductor Multimedia</h1>    
+    <div id="musicas"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/musica')
+                .then(response => response.json())
+                .then(musicas => {
+                    const musicasD = document.getElementById('musicas');
+                    musicas.forEach(musica => {
+                        const musicaD = document.createElement('div');
+                        musicaD.classList.add('musica');
+
+                        const musicaAudio = document.createElement('audio');
+                        musicaAudio.controls = true;
+                        musicaAudio.src = `/tracks/${musica.audio}`;
+
+                        const musicaInfo = document.createElement('div');
+                        musicaInfo.classList.add('musica-info');
+                        musicaInfo.innerHTML = `<hr>
+                            <h2>${musica.nombre}</h2>
+                            <p>${musica.artista}</p>
+                            <p>${musica.genero}</p>
+                            <p>${musica.precio.toFixed(2)}</p>
+                        `;
+
+                        musicaD.appendChild(musicaInfo);
+                        musicaD.appendChild(musicaAudio);
+                        musicasD.appendChild(musicaD);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
