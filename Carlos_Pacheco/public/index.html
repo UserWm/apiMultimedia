@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBeats</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-container {
+            background-color: #000000;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23222' stroke-width='10' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        .title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #282828;
+    padding: 20px;
+    border-bottom: 4px solid #ff6f61;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .song-container {
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .song-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .song-info {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .song-info h2 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #f0f0f0;
+        }
+
+        .song-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #cccccc;
+        }
+
+        audio {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title-bar">
+        <h1>EchoBeats</h1>
+    </div>
+
+    <div id="main-container">
+        <div id="canciones"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/music')
+                .then(response => response.json())
+                .then(songs => {
+                    const cancionesDiv = document.getElementById('canciones');
+                    songs.forEach(song => {
+                        const songContainer = document.createElement('div');
+                        songContainer.classList.add('song-container');
+
+                        const songImage = document.createElement('img');
+                        songImage.classList.add('song-image');
+                        songImage.src = song.Img;
+                        songImage.alt = 'Imagen de la canción';
+                        songContainer.appendChild(songImage);
+
+                        const songInfo = document.createElement('div');
+                        songInfo.classList.add('song-info');
+                        songInfo.innerHTML = `
+                            <h2>${song.Nombre}</h2>
+                            <p>Artista: ${song.Artista}</p>
+                            <p>Género: ${song.Genero}</p>
+                            <p>Precio: $${song.Precio.toFixed(2)}</p>
+                        `;
+
+                        const songAudio = document.createElement('audio');
+                        songAudio.src = `/audios/${song.Audio}`;
+                        songAudio.type = "audio/mp3";
+                        songAudio.controls = true;
+
+                        songContainer.appendChild(songInfo);
+                        songContainer.appendChild(songAudio);
+                        cancionesDiv.appendChild(songContainer);
+                    });
+                })
+                .catch(error => console.error('Error', error));
+        });
+    </script>
+</body>
+
+</html>
