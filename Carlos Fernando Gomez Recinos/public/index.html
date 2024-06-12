@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoniSync</title>
+    <style>
+        
+        body {
+            background-color: #000000; 
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        #main-container {
+            background-image: url('https://static.vecteezy.com/system/resources/previews/021/619/423/original/ocean-beach-sunset-travel-logo-good-for-travel-company-logo-free-vector.jpg'); /* Reemplaza 'tu_imagen_de_fondo.jpg' con la URL de tu imagen de fondo */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 20px; 
+        }
+
+        
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #46109c; 
+            padding: 10px;
+           
+        }
+
+       
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+       
+        h1 {
+            color: #ffffff; 
+            margin: 0;
+        }
+
+       
+        .song-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative; 
+        }
+        
+        
+        .song-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 65px; 
+            object-fit: cover; 
+            border-radius: 5px; 
+            opacity: 0.7; 
+            z-index: 1; 
+        }
+        
+        
+        .song-info {
+            margin-left: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        
+        .song-info:hover {
+            background-color: #e0e0e0;
+        }
+
+        audio {
+            width: 300px;
+            z-index: 0; 
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="title-bar">
+        <img class="logo" src="https://cdn-icons-png.flaticon.com/512/176/176531.png" alt="a">
+        <h1>Reproductor de Música</h1>
+    </div>
+    
+    
+    <div id="main-container">      
+        <div id="canciones"></div>
+    </div>
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function (){
+            fetch('/canciones')
+                .then(response => response.json())
+                .then(songs => {
+                    const cancionesDiv = document.getElementById('canciones');
+                    songs.forEach(song => {
+                        const songContainer = document.createElement('div');
+                        songContainer.classList.add('song-container');
+
+                        
+                        const songImage = document.createElement('img');
+                        songImage.classList.add('song-image');
+                        songImage.src = song.Img; 
+                        songImage.alt = 'Imagen de la canción'; 
+                        songContainer.appendChild(songImage);
+
+                        const songAudio = document.createElement('audio');
+                        songAudio.src = `/audios/${song.Audio}`;
+                        songAudio.type="audio/mp3";
+                        songAudio.controls = true;
+                        
+                        const songInfo = document.createElement('div');
+                        songInfo.classList.add('song-info');
+                        songInfo.innerHTML = `
+                            <h2>${song.Nombre}</h2>
+                            <p>Artista: ${song.Artista}</p>
+                            <p>Genero: ${song.Genero}</p>
+                            <p>Precio: ${song.Precio.toFixed(2)}</p>
+                        `;
+
+                        songContainer.appendChild(songAudio);
+                        songContainer.appendChild(songInfo);
+                        cancionesDiv.appendChild(songContainer);
+                    });
+                })
+                .catch(error => console.error('Error', error));
+        });
+    </script>
+</body>
+</html>
