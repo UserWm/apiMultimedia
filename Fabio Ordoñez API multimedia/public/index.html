@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librería de música</title>
+</head>
+
+<body>
+    <br>
+    <h1>Lista de canciones</h1>
+    <br>
+    <div id="tracks"></div>
+    <script>
+        async function fetchTracks() {
+            const response = await fetch('/api/tracks');
+            const tracks = await response.json();
+
+            const tracksContainer = document.getElementById('tracks');
+            tracks.forEach(track => {
+                const trackElement = document.createElement('div');
+                trackElement.innerHTML = `
+                    <h3>${track.nombre}</h3>
+                    <p>Artist: ${track.artista}</p>
+                    <p>Genre: ${track.genero}</p>
+                    <p>Price: $${track.precio}</p>
+                    <audio controls>
+                        <source src="${track.audio}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                `;
+                tracksContainer.appendChild(trackElement);
+            });
+        }
+        fetchTracks();
+    </script>
+</body>
+
+</html>
