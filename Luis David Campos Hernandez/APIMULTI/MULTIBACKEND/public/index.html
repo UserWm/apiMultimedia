@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+    <style>
+        .cancion {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+        }
+        .cancion-info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Biblioteca</h1>
+    <div id="cancion"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/cancion')
+            .then(response => response.json())
+            .then(cancion => {
+                const cancionesDiv = document.getElementById('cancion');
+                canciones.forEach(cancion => {
+                    const cancionDiv = document.createElement('div');
+                    cancionDiv.classList.add('cancion');
+
+                    const cancionINFO = document.createElement('div');
+                    cancionINFO.classList.add('cancion-info');
+                    cancionINFO.innerHTML = `
+                        <h2>${cancion.nombreCancion}</h2>
+                        <p>Artistas: ${cancion.artistas}</p>
+                        <p>Género: ${cancion.genero}</p>
+                        <p>Precio: $${cancion.precio.toFixed(2)}</p>`;
+
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    const source = document.createElement('source');
+                    source.src = `/tracks/${cancion.audio}`;
+                    source.type = 'audio/mpeg';
+                    audio.appendChild(source);
+
+                    cancionDiv.appendChild(cancionINFO);
+                    cancionDiv.appendChild(audio);
+                    cancionesDiv.appendChild(cancionDiv);
+                });
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>
