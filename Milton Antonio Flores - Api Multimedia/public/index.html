@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Canciones</h1>
+        <form id="songForm">
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+            <input type="text" id="artista" name="artista" placeholder="Artista" required>
+            <input type="text" id="genero" name="genero" placeholder="Género" required>
+            <input type="number" id="precio" name="precio" placeholder="Precio" required>
+            <input type="file" id="audio" name="audio" accept="audio/mpeg" required>
+            <button type="submit">Agregar Canción</button>
+        </form>
+        <ul id="songList"></ul>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
