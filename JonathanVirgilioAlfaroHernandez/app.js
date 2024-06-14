@@ -18,7 +18,7 @@ mongoose.connect(mongoURI)
 .then(()=> console.log('MongoDB conectado'))
 .catch(err =>console.log(err))
 
-const rutaProductos = require('./rutas/musicas')
-app.use('/api/musica', rutaProductos)
+const rutaMusicas = require('./rutas/musicas')
+app.use('/api/musica', rutaMusicas)
 
 app.listen(port, () => console.log(`Servidor listo ${port}!`))
