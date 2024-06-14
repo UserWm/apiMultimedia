@@ -12,8 +12,8 @@ const MusicaShema = new mongoose.Schema({
     },
 
     genero:{
-        type: Number,
-        require:true 
+        type: String,
+        require:true
     },
 
     precio:{
@@ -21,9 +21,9 @@ const MusicaShema = new mongoose.Schema({
         require:true
     },
 
-    audio: {
+    audio:{
         type: String,
-        require: true
+        require:true
     }
 })
 

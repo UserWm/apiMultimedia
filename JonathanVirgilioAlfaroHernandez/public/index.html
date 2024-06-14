@@ -6,63 +6,53 @@
     <title>View</title>
 </head>
 <style>
-    img{
+    img {
         width: 250px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .musica {
+        margin-bottom: 20px;
     }
 </style>
 <body>
-    <h1>Productos</h1>
-    <button id="generarReporte">Generar Reporte</button>  
-    <br><br>
-    <div id="productos">
-    </div>
-
+    <h1>Reproductor Multimedia</h1>    
+    <div id="musicas"></div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/producto') 
+            fetch('/api/musica')
                 .then(response => response.json())
-                .then(productos => {
-                    const productosD = document.getElementById('productos'); 
-                    productos.forEach(producto => {
-                        const productoD = document.createElement('div'); 
-                        productoD.classList.add('producto');
+                .then(musicas => {
+                    console.log(musicas); // Añadido para depuración
+                    const musicasD = document.getElementById('musicas');
+                    musicas.forEach(musica => {
+                        const musicaD = document.createElement('div');
+                        musicaD.classList.add('musica');
 
-                        const productoImg = document.createElement('img');
-                        productoImg.src = `/uploads/${producto.imagen}`;
-                        productoImg.alt = producto.producto;
-                        productoD.appendChild(productoImg);
+                        const musicaAudio = document.createElement('audio');
+                        musicaAudio.controls = true;
+                        musicaAudio.src = `/uploads/${musica.audio}`;
+                        musicaAudio.onerror = function() {
+                            console.error(`No se pudo cargar el archivo de audio: ${musicaAudio.src}`);
+                        };
 
-                        const productoInfo = document.createElement('div');
-                        productoInfo.classList.add('producto-info');
-                        productoInfo.innerHTML = `
-                            <hr>
-                            <h2>${producto.producto}</h2>
-                            <p>${producto.categoria}</p>
-                            <p>${producto.existencia}</p>
-                            <p>${producto.precio.toFixed(2)}</p>
+                        const musicaInfo = document.createElement('div');
+                        musicaInfo.classList.add('musica-info');
+                        musicaInfo.innerHTML = `<hr>
+                            <h2>${musica.nombre}</h2>
+                            <p>${musica.artista}</p>
+                            <p>${musica.genero}</p>
+                            <p>${musica.precio.toFixed(2)}</p>
                         `;
 
-                        productoD.appendChild(productoInfo);
-                        productosD.appendChild(productoD);
+                        musicaD.appendChild(musicaInfo);
+                        musicaD.appendChild(musicaAudio);
+                        musicasD.appendChild(musicaD);
                     });
                 })
-                .catch(error => console.error('Error:', error)); 
-
-                document.getElementById('generarReporte').addEventListener('click', function() {
-                fetch('/api/producto/reporte')
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `Reporte_Productos_${new Date().toLocaleDateString()}.pdf`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a); // Remove it properly from the DOM
-                        window.URL.revokeObjectURL(url); // Release the blob URL
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
+                .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
