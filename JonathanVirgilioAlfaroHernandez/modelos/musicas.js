@@ -1,19 +1,19 @@
 const mongoose = require('mongoose')
 
-const ProductoShema = new mongoose.Schema({
-    producto:{
+const MusicaShema = new mongoose.Schema({
+    nombre:{
         type: String,
         require:true
     },
 
-    categoria:{
+    artista:{
         type: String,
         require:true
     },
 
-    existencia:{
+    genero:{
         type: Number,
-        require:true
+        require:true 
     },
 
     precio:{
@@ -21,10 +21,10 @@ const ProductoShema = new mongoose.Schema({
         require:true
     },
 
-    imagen: {
+    audio: {
         type: String,
         require: true
     }
 })
 
-module.exports = mongoose.model('Producto', ProductoShema)
+module.exports = mongoose.model('Musica', MusicaShema)
