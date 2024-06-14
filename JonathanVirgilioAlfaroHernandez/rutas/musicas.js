@@ -1,6 +1,6 @@
 const express = require('express')
 const rutas = express.Router()
-const Producto = require('../modelos/productos')
+const Producto = require('../modelos/musicas')
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb){
         cb(null, Date.now() + path.extname(file.originalname))
-    }
+    } 
 })
 
 const carga = multer({storage:storage})
