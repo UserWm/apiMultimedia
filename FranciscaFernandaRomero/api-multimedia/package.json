@@ -1,0 +1,23 @@
+{
+  "name": "api-multimedia",
+  "version": "1.0.0",
+  "description": "API RESTful para gestionar una colección de pistas de audio",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["api", "multimedia", "audio", "express", "mongoose", "multer"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.3",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
+

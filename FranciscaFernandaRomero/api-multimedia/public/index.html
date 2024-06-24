@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Musical</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .track { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Biblioteca  de Musica</h1>
+  <div id="tracks"></div>
+
+  <script>
+async function fetchTracks() {
+  const response = await fetch('/api/tracks');
+  const tracks = await response.json();
+  const tracksContainer = document.getElementById('tracks');
+  tracksContainer.innerHTML = tracks.map(track => {
+    // Obtener solo el nombre del archivo desde la ruta completa
+    const fileName = track.audio.split('/').pop();
+    return `
+      <div class="track">
+        <h2>${track.nombre}</h2>
+        <p>Artistas: ${track.artistas}</p>
+        <p>Género: ${track.genero}</p>
+        <p>Precio: $${track.precio}</p>
+        <audio controls>
+          <source src="/tracks/${track.audio}" type="audio/mpeg">
+          Tu navegador no soporta la reproducción de audio.
+        </audio>
+      </div>
+    `;
+  }).join('');
+}
+
+
+    window.onload = fetchTracks;
+  </script>
+</body>
+</html>
